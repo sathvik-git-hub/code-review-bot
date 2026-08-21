@@ -131,7 +131,7 @@ Keep feedback concise but actionable."""
 
     try:
         message = groq_client.chat.completions.create(
-            model="llama-3.1-8b-instant",  # Fast and good for code review
+            model="openai/gpt-oss-120b",  # Fast and good for code review
             max_tokens=500,
             messages=[
                 {"role": "user", "content": prompt}
