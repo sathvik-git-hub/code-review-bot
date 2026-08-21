@@ -16,6 +16,16 @@ load_dotenv()
 # Initialize FastAPI app
 app = FastAPI(title="Code Review Bot", version="1.0")
 
+from fastapi.middlewear.cors import CORSMiddleware
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allow all origins for now
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 # Initialize Groq client
 groq_client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
@@ -38,7 +48,10 @@ class Review(BaseModel):
     feedback: str
     severity: str  # "critical", "warning", "info"
     created_at: str
-
+class CodeSubmissin(BaseModel):
+    code: str
+    language: Optional[str] = "python"
+    filename: Optional[str] = "submitted_code"
 
 def verify_github_webhook(request_body: bytes, signature: str) -> bool:
     """Verify that the webhook came from GitHub"""
@@ -303,8 +316,15 @@ async def get_stats():
         "warnings": warnings,
         "repos_reviewed": len(set(r["repo"] for r in reviews_db))
     }
-
-
+@app.post("/review")
+async def manual_review(submission: CodeSubmission):
+    """Manually submit code for review (used by frontend demo)"""
+    review = review_code_with_groq(submission.filename, submission.code, submission.language)
+    return {
+        "feedback": review["feedback"],
+        "severity": review["severity"],
+        "language": submission.language
+    }
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
