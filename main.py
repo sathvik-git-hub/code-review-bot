@@ -16,7 +16,7 @@ load_dotenv()
 # Initialize FastAPI app
 app = FastAPI(title="Code Review Bot", version="1.0")
 
-from fastapi.middlewear.cors import CORSMiddleware
+from fastapi.middleware.cors import CORSMiddleware
 
 app.add_middleware(
     CORSMiddleware,
