@@ -48,7 +48,7 @@ class Review(BaseModel):
     feedback: str
     severity: str  # "critical", "warning", "info"
     created_at: str
-class CodeSubmissin(BaseModel):
+class CodeSubmission(BaseModel):
     code: str
     language: Optional[str] = "python"
     filename: Optional[str] = "submitted_code"
