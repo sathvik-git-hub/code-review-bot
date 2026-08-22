@@ -138,7 +138,7 @@ Keep feedback concise but actionable."""
             ]
         )
         
-        response_text = message.content[0].message.content
+        response_text = message.choices[0].message.content
         
         # Parse the response
         lines = response_text.split('\n')
